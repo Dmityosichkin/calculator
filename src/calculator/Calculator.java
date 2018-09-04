@@ -1,6 +1,9 @@
 package calculator;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Dimitry Osichkin
  * @version 1.0
@@ -9,11 +12,38 @@ package calculator;
 class Calculator {
 
     String calculate(String[] expression) {
+        List<String> tmp = new ArrayList<>();
 
-        double result = Double.parseDouble(expression[0]);
+        double a = Double.parseDouble(expression[0]);
         for (int i = 1; i < expression.length; i += 2) {
             String op = expression[i];
             double b = Double.parseDouble(expression[i + 1]);
+            switch (op) {
+                case "+":
+                case "-":
+                    tmp.add(String.valueOf(a));
+                    tmp.add(op);
+                    a = b;
+                    break;
+                case "*":
+                    a *= b;
+                    break;
+                case "/":
+                    a /= b;
+                    break;
+            }
+        }
+
+        tmp.add(String.valueOf(a));
+
+        System.out.println(tmp);
+
+
+
+        double result = Double.parseDouble(tmp.get(0));
+        for (int i = 1; i < tmp.size(); i += 2) {
+            String op = expression[i];
+            double b = Double.parseDouble(tmp.get(i + 1));
             switch (op) {
                 case "+":
                     result += b;
