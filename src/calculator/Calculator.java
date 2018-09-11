@@ -10,14 +10,38 @@ import java.util.List;
  * @since 1.0
  */
 class Calculator {
-
     String calculate(String[] expression) {
+        List<String> tmp = new ArrayList<>(List.of(expression));
+
+        int brOpenInd = -1;
+        do {
+            brOpenInd = -1;
+        for (int i = 0; i < tmp.size(); i++) {
+            String a = tmp.get(i);
+            if (a.equals("(")) {
+                brOpenInd = i;
+            } else if (a.equals(")")) {
+                var inBR = tmp.subList(brOpenInd + 1, i);
+                var result = calculate(inBR);
+                tmp.subList(brOpenInd, i + 1).clear();
+                tmp.add(brOpenInd, result);
+                break;
+
+            }
+
+        }
+    } while (brOpenInd != -1);
+
+        return calculate(tmp);
+    }
+
+    String calculate(List<String> expression) {
         List<String> tmp = new ArrayList<>();
 
-        double a = Double.parseDouble(expression[0]);
-        for (int i = 1; i < expression.length; i += 2) {
-            String op = expression[i];
-            double b = Double.parseDouble(expression[i + 1]);
+        double a = Double.parseDouble(expression.get(0));
+        for (int i = 1; i < expression.size(); i += 2) {
+            String op = expression.get(i);
+            double b = Double.parseDouble(expression.get(i+1));
             switch (op) {
                 case "+":
                 case "-":
@@ -39,10 +63,9 @@ class Calculator {
         System.out.println(tmp);
 
 
-
         double result = Double.parseDouble(tmp.get(0));
         for (int i = 1; i < tmp.size(); i += 2) {
-            String op = expression[i];
+            String op = expression.get(i);
             double b = Double.parseDouble(tmp.get(i + 1));
             switch (op) {
                 case "+":
